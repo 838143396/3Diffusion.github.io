@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="3D Priors-Guided Diffusion for Blind Face Restoration.">
+  <meta name="keywords" content="adapter, fine-grained ID / attribute control, pre-trained diffusion models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Priors-Guided Diffusion for Blind Face Restoration</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">
+            <span style="background: linear-gradient(to right,  indigo, skyblue, violet, indigo, violet); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                3D Priors-Guided Diffusion
+            </span>
+            <br> for Blind Face Restoration
+          </h1>       
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="">Xiaobin Lu</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.de/citations?user=3lMuodUAAAAJ&hl=en">Xiaobin Hu</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://orcid.org/0000-0003-4283-5076">Jun Luo</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://orcid.org/0009-0000-0638-4402">Ben Zhu</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://orcid.org/0009-0009-3214-6593">Yaping Ruan</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://rwenqi.github.io/">Wenqi Ren</a><sup>1</sup>,
+            </span>
+            
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Shenzhen Campus of Sun Yat-sen University,</span>
+            <span class="author-block"><sup>2</sup>Tencent Youtu Lab,</span>
+            <span class="author-block"><sup>3</sup>University of Chinese Academy of Sciences,</span>
+            <span class="author-block"><sup>4</sup>Tencent Cloud Architecture Platform</span>
+          </div>
+
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="xxxxxarxiv"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>ArXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/838143396/3Diffusion"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>            
+            </div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+
+  <div class="hero-body">
+    <div class="container">
+      <div class="content has-text-centered">
+        <video id="replay-video"
+                controls
+                autoplay
+                muted
+                loop
+                preload
+                playsinline
+                width="81%">
+          <source src="./static/videos/banner.mp4"
+                  type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+   <div class="columns is-centered has-text-centered">
+      <div class="column">
+        <h2 class="title is-3" style="background: linear-gradient(to right,  indigo, indigo, skyblue,indigo, indigo); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> Motivation</h3>
+        <h4 class="title is-5" style="text-align: center;">Although current diffusion-based blind face restoration methods have shown promising results in terms of image quality restoration, they often fail to ensure the identity consistency of the restored faces.</h4>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+
+      <!-- reenact. -->
+      <div class="column">
+        <div class="content">
+          <h4 class="title is-5" style="text-align: center;">&#11088;Face Restoration</h4>
+          <p>
+            we design ingenious modules to incorporate the 3D priors into the diffusion model. A customized multi-level feature extraction method is designed to fully exploit both structural and identity information of 3D facial images, which are then mapped into the noise estimation process.
+          </p>
+          <div class="item item-chair-tp">
+            <img src="./static/images/reenact.png"
+            class="interpolation-image"
+            alt="Interpolate start reference image."/>
+          </div>
+        </div>
+      </div>
+      <!--/ reenact -->
+
+    </div>
+    <!--/ swap. -->
+
+        <div class="columns is-centered has-text-centered">
+          <div class="column">
+            <h2 class="title is-3" style="background: linear-gradient(to right,  indigo, indigo, skyblue, indigo, indigo); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> Adapter Design</h3>
+          </div>
+        </div>
+    
+        
+        <div class="content has-text-justified">
+          <p>
+            &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &#11088; Blind face restoration endeavors to restore a clear face image from a degraded counterpart. Recent approaches employing Generative Adversarial Networks (GANs) as priors have demonstrated remarkable success in this field. However, these methods encounter challenges in achieving a balance between realism and fidelity, particularly in complex degradation scenarios.
+            To inherit the exceptional realism generative ability of the diffusion model and also constrained by the identity-aware fidelity, we propose a novel diffusion-based framework by embedding the 3D facial priors as structure and identity constraints into a denoising diffusion process. 
+            Specifically, in order to obtain more accurate 3D prior representations, the 3D facial image is reconstructed by a 3D Morphable Model (3DMM) using an initial restored face image that has been processed by a pretrained restoration network. 
+            A customized multi-level feature extraction method is employed to exploit both structural and identity information of 3D facial images, which are then mapped into the noise estimation process. 
+            In order to enhance the fusion of identity information into the noise estimation, we propose a Time-Aware Fusion Block (TAFB). This module offers a more efficient and adaptive fusion of weights for denoising, considering the dynamic nature of the denoising process in the diffusion model, which involves initial structure refinement followed by texture detail enhancement.
+            Extensive experiments demonstrate that our network performs favorably against state-of-the-art algorithms on synthetic and real-world datasets for blind face restoration.
+
+            <br>
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="replay-video"
+                 controls
+                 muted
+                 loop
+                 preload
+                 playsinline
+                 width="100%">
+            <source src="./static/videos/adapterdesign_compress.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <!--/ Re-rendering. -->
+
+
+        <div class="columns is-centered has-text-centered">
+          <div class="column">
+            <h2 class="title is-3" style="background: linear-gradient(to right,  indigo,indigo, skyblue,indigo, indigo); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> More Comparison Results</h3>
+          </div>
+        </div>
+        <!-- <h3 class="title is-4" style="text-align:center;">More Comparison Results</h3> -->
+        <div class="content has-text-centered">
+        </div>
+
+
+        <h4 class="title is-5" style="text-align: center;">&#11088;Qualitative comparisons on the synthetic dataset</h4>
+        <div class="columns is-centered">
+          <div class="column content" style="text-align: center;">
+
+            <div class="item item-chair-tp">
+              <img src="./static/images/pic2.png"
+              class="interpolation-image"
+              alt="Interpolate start reference image."/>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="title is-5" style="text-align: center;">&#11088;Qualitative comparisons on the real-world dataset</h4>
+        <div class="columns is-centered">
+          <div class="column content" style="text-align: center;">
+            <p>
+            <br>
+            === Comparison Under The Real-world Dataset ===
+            </p>
+            <div class="item item-chair-tp">
+              <img src="./static/images/pic4.png"
+              class="interpolation-image"
+              alt="Interpolate start reference image."/>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column content" style="text-align: center;" >
+            <p>
+            <br>
+            === Comparison Under The Synthetic Dataset ===
+            </p>
+            <div class="item item-chair-tp">
+              <img src="./static/images/swappose.png"
+              class="interpolation-image"
+              alt="Interpolate start reference image."/>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<section class="hero is-light is-small">
+  <h2 class="subtitle has-text-centered">
+    <br>
+     Check out our paper and mess around with our code! <br>
+     <!-- <p>&#128071</p> -->
+     <p>&#8623</p>
+      <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/paper/arxiv.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/FaceAdapter/Face-Adapter" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> 
+  </h2>
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+
+
+        <div class="item custom-size item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/6.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item custom-size item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item custom-size item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/3.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item custom-size item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/4.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item custom-size item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/5.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div>
+    <div class="item item-chair-tp" style="text-align:center;">
+      <img src="./static/images/id.png"
+      class="interpolation-image"
+      alt="Interpolate start reference image."
+      style="width: 81%; height: 81%;"/>
+  </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
